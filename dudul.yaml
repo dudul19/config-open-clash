@@ -1,0 +1,126 @@
+proxies:
+  - name: "🚀 Direct"
+    type: direct
+    udp: true
+  - name: "⛔ Reject"
+    type: reject
+
+proxy-providers:
+  PROXIES:
+    type: file
+    path: "./proxy_provider/proxy.yaml"
+    health-check:
+      enable: false
+      url: http://cp.cloudflare.com/generate_204
+      interval: 300
+
+proxy-groups:
+  - name: 🛡️ Ads Block
+    type: select
+    disable-udp: false
+    use:
+      - PROXIES
+    proxies:
+      - "⛔ Reject"   
+      - "🚀 Direct"   
+
+  - name: 🎬 Streaming
+    type: select
+    disable-udp: false
+    use:
+      - PROXIES
+    proxies:
+      - "🚀 Direct"
+      - "⛔ Reject"
+
+  - name: 🎮 Games
+    type: select
+    disable-udp: false
+    use:
+      - PROXIES
+    proxies:
+      - "🚀 Direct"
+      - "⛔ Reject"
+
+  - name: 💸 E-Wallet
+    type: select
+    disable-udp: false
+    use:
+      - PROXIES
+    proxies:
+      - "🚀 Direct"
+      - "⛔ Reject"
+
+  - name: 💬 Sosmed
+    type: select
+    disable-udp: false
+    use:
+      - PROXIES
+    proxies:
+      - "🚀 Direct"
+      - "⛔ Reject"
+
+  - name: 🎵 TikTok
+    type: select
+    disable-udp: false
+    use:
+      - PROXIES
+    proxies:
+      - "🚀 Direct"
+      - "⛔ Reject"
+
+  - name: 🌍 Global
+    type: select
+    disable-udp: false
+    use:
+      - PROXIES
+    proxies:
+      - "🚀 Direct"
+      - "⛔ Reject"
+
+rule-providers:
+  Ads:
+    type: http
+    behavior: classical
+    path: "./rule_provider/oisd_big.yaml"
+    url: https://raw.githubusercontent.com/hillz2/openclash_adblock/main/oisd_big.yaml
+    interval: 28800
+  Direct:
+    type: file
+    behavior: classical
+    path: "./rule_provider/direct.yaml"
+  Tiktok:
+    type: file
+    behavior: classical
+    path: "./rule_provider/tiktok.yaml"
+  Reject:
+    type: file
+    behavior: classical
+    path: "./rule_provider/reject.yaml"
+  Streaming:
+    type: file
+    behavior: classical
+    path: "./rule_provider/streaming.yaml"
+  Games:
+    type: file
+    behavior: classical
+    path: "./rule_provider/games.yaml"
+  Sosmed:
+    type: file
+    behavior: classical
+    path: "./rule_provider/sosmed.yaml"
+  Ewallet:
+    type: file
+    behavior: classical
+    path: "./rule_provider/ewallet.yaml"
+
+rules:
+  - RULE-SET,Ads,🛡️ Ads Block
+  - RULE-SET,Sosmed,💬 Sosmed
+  - RULE-SET,Ewallet,💸 E-Wallet
+  - RULE-SET,Tiktok,🎵 TikTok
+  - RULE-SET,Streaming,🎬 Streaming
+  - RULE-SET,Games,🎮 Games
+  - RULE-SET,Direct,🚀 Direct
+  - RULE-SET,Reject,⛔ Reject
+  - MATCH,🌍 Global
